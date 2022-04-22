@@ -13,6 +13,10 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    current_user.invalidate_token
+    if current_user.invalidate_token
+      render json: { message: 'Successfully logged out' }, status: :ok
+    else
+      render_unauthorized('Failed to log out')
+    end
   end
 end

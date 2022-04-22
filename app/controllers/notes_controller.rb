@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class NotesController < ApplicationController
+
+  def index
+    @notes = current_user.notes
+    render json: @notes
+  end
+
+
   def show
     @note = current_user.find(params[:id])
     render json: @note
