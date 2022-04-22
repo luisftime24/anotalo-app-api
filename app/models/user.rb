@@ -7,7 +7,6 @@ class User < ApplicationRecord
   # Validations
   validates :last_name, :name, presence: true, length: { in: 3..30 }
   validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, presence: true, length: { in: 6..30 }
 
   has_secure_token
   has_secure_password
@@ -19,10 +18,10 @@ class User < ApplicationRecord
   end
 
   def self.authenticated_user?(email, password)
-    user = find_by(email: email)
+    user = User.find_by(email: email)
     return false unless user&.authenticate(password)
 
-    user.generate_token
+    user.regenerate_token
     user
   end
 end
