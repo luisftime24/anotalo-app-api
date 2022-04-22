@@ -1,5 +1,6 @@
-class User < ApplicationRecord
+# frozen_string_literal: true
 
+class User < ApplicationRecord
   # Associations
   has_many :notes, dependent: :destroy
 
@@ -10,4 +11,18 @@ class User < ApplicationRecord
 
   has_secure_token
   has_secure_password
+
+
+  # Methods
+  def invalidate_token
+    update(token: nil)
+  end
+
+  def self.authenticated_user?(email, password)
+    user = find_by(email: email)
+    return false unless user&.authenticate(password)
+
+    user.generate_token
+    user
+  end
 end
